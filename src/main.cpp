@@ -164,7 +164,7 @@ int main()
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        for(int i = 1; i <= 12 * 3; i++)
+        for(int i = 1; i <= 12 * 8; i++)
         {
             glm::mat4 matrix = glm::mat4(1.0f * size, 0.0f, 0.0f, x + cos((i + 0.3f) + time)*0.7f,
                                          0.0f, 1.0f * size, 0.0f, y + sin((i + 0.3f) + time) * 0.7f,
