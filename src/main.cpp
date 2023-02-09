@@ -9,6 +9,7 @@
 
 #include "Handler/Shader/Shader.h"
 #include "Handler/Objects/VBO/VBO.h"
+#include "Handler/Objects/EBO/EBO.h"
 #include "Handler/Objects/VAO/VAO.h"
 
 void ProccessInput(GLFWwindow* window)
@@ -87,31 +88,25 @@ int main()
 
 
     Shader defaultShader("shaders/dVertex.glsl", "shaders/dFragment.glsl");
-
-    GLuint ebo;
-
-    glGenBuffers(1, &ebo);
-    
+   
     
 
     VAO vao;
 
     vao.Bind();
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(TriangleIndicies), TriangleIndicies, GL_STATIC_DRAW);
     
 
-    VBO vbo(Triangle, sizeof(Triangle)), cbo(Color, sizeof(Color)); 
 
+    VBO vbo(Triangle, sizeof(Triangle)), cbo(Color, sizeof(Color)); 
+    EBO ebo(TriangleIndicies, sizeof(TriangleIndicies));
+    ebo.Bind();
    
     vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
 
 //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+    
     vao.Unbind();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+    ebo.Unbind();
 
 
     vao.Bind();
