@@ -6,11 +6,36 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Handler/Objects/GameObject/GameObject.h"
 
 #include "Handler/Shader/Shader.h"
 #include "Handler/Objects/VBO/VBO.h"
 #include "Handler/Objects/EBO/EBO.h"
 #include "Handler/Objects/VAO/VAO.h"
+
+void Movement(GLFWwindow* window, GameObject& obj)
+{
+    float speed = 0.01f;
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        obj.Translate(glm::vec3(speed, 0, 0));
+    }
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        obj.Translate(glm::vec3(-speed, 0, 0));
+    }
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        obj.Translate(glm::vec3(0, speed, 0));
+    }
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        obj.Translate(glm::vec3(0, -speed, 0));
+    }
+
+
+}
+
 
 void ProccessInput(GLFWwindow* window)
 {
@@ -129,6 +154,11 @@ int main()
 
     float size = 0.2f;
 
+
+    GameObject entity;
+
+    entity.Resize(0.2f);
+
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -137,6 +167,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(1.0f, 1.0f, 0.2f, 1.0f);
 
+        Movement(window, entity);
+        entity.Render();
+        
+
         defaultShader.UseProgram();
         vao.Bind();
         if(x > 2) x = -2.0f;
@@ -144,6 +178,7 @@ int main()
 
         //x = 0;
 
+        
         
 
         glm::mat4 matrix = glm::mat4(1.0f * size, 0.0f, 0.0f, x,
@@ -159,7 +194,7 @@ int main()
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        for(int i = 1; i <= 12 * 8; i++)
+        for(int i = 1; i <= 2; i++)
         {
             glm::mat4 matrix = glm::mat4(1.0f * size, 0.0f, 0.0f, x + cos((i + 0.3f) + time)*0.7f,
                                          0.0f, 1.0f * size, 0.0f, y + sin((i + 0.3f) + time) * 0.7f,
