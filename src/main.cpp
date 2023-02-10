@@ -157,7 +157,7 @@ int main()
 
     GameObject entity;
 
-    entity.Resize(0.2f);
+    entity.Resize(0.4f);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -167,8 +167,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(1.0f, 1.0f, 0.2f, 1.0f);
 
-        Movement(window, entity);
-        entity.Render();
+       
         
 
         defaultShader.UseProgram();
@@ -207,6 +206,11 @@ int main()
            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         }
+        vao.Unbind();
+        defaultShader.DisableProgram();
+
+        Movement(window, entity);
+        entity.Render();
 
         glfwSwapBuffers(window);
     }
