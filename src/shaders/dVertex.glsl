@@ -15,7 +15,8 @@ float Ranged()
 void main(void)
 {
     gl_Position =  u_Transform * vec4(inPos, 1.0f);
-    outColor = vec3(1.0f * Ranged(), 0.8f * Ranged()*0.4f, 0.8f * Ranged() * 0.75f);
+    //outColor = vec3(1.0f * Ranged(), 0.8f * Ranged()*0.4f, 0.8f * Ranged() * 0.75f);
 
+    outColor = inCol * Ranged();
     //outColor = inCol;
 }
