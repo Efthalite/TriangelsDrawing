@@ -41,6 +41,13 @@ void GameObject::Resize(float size)
     objSize = size;
 }
 
+
+
+glm::vec3 GameObject::GetPosition() const
+{
+    return objPosition;
+}
+
 void GameObject::Render()
 {
 

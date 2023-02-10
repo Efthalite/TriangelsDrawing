@@ -59,6 +59,9 @@ public:
     void Translate(glm::vec3 addPos);
     void Resize(float size);
 
+
+    glm::vec3 GetPosition() const;
+
     void Render();
 
 

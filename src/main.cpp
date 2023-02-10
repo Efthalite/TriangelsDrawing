@@ -15,7 +15,7 @@
 
 void Movement(GLFWwindow* window, GameObject& obj)
 {
-    float speed = 0.01f;
+    float speed = 0.03f;
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
         obj.Translate(glm::vec3(speed, 0, 0));
@@ -112,52 +112,13 @@ int main()
 
 
 
-    Shader defaultShader("shaders/dVertex.glsl", "shaders/dFragment.glsl");
-   
-    
 
-    VAO vao;
-
-    vao.Bind();
-    
-
-
-    VBO vbo(Triangle, sizeof(Triangle)), cbo(Color, sizeof(Color)); 
-    EBO ebo(TriangleIndicies, sizeof(TriangleIndicies));
-    ebo.Bind();
-   
-    vao.LinkAttrib(vbo, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    
-    vao.Unbind();
-    ebo.Unbind();
-
-
-    vao.Bind();
-    vao.LinkAttrib(cbo, 1, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
-    
-
-    vao.Unbind();
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-    std::cout << "\n\n\n\n\n to be sure you can delete it will be changed a lot of times" << std::endl;
-
-    
-
-
-    
-    float x = 0;
-    float y = 0;
-    float z = 0;
-
-    float size = 0.2f;
-
-
-    GameObject entity;
+    GameObject entity, CenterQuad;
 
     entity.Resize(0.4f);
+    CenterQuad.Resize(0.2f);
+   // RotatingQuad.Resize(0.2f);
+
 
     while(!glfwWindowShouldClose(window))
     {
@@ -167,47 +128,26 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(1.0f, 1.0f, 0.2f, 1.0f);
 
-       
-        
-
-        defaultShader.UseProgram();
-        vao.Bind();
-        if(x > 2) x = -2.0f;
-        x += 0.01f;
-
-        //x = 0;
-
-        
-        
-
-        glm::mat4 matrix = glm::mat4(1.0f * size, 0.0f, 0.0f, x,
-                            0.0f, 1.0f * size, 0.0f, y,
-                            0.0f, 0.0f, 1.0f * size, z,
-                            0.0f, 0.0f, 0.0f, 1.0f);
-
-        defaultShader.UniformMatrix4fv("u_Transform", matrix);
-
         float time = glfwGetTime();
-        defaultShader.Uniform1f("u_Time", time);
-    
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        CenterQuad.Render();
+        if(CenterQuad.GetPosition().x < 2.0f) CenterQuad.Translate(glm::vec3(0.01, 0.0f, 0.0f));
+        else CenterQuad.Translate(glm::vec3(-4.0f, 0.0f, 0.0f));
 
-        for(int i = 1; i <= 2; i++)
+
+        for(int i = 0; i < 6; i++)
         {
-            glm::mat4 matrix = glm::mat4(1.0f * size, 0.0f, 0.0f, x + cos((i + 0.3f) + time)*0.7f,
-                                         0.0f, 1.0f * size, 0.0f, y + sin((i + 0.3f) + time) * 0.7f,
-                                         0.0f, 0.0f, 1.0f * size, z,
-                                         0.0f, 0.0f, 0.0f, 1.0f);
+            GameObject RotatingQuad;
+            RotatingQuad.Resize(0.15f);
 
-            defaultShader.UniformMatrix4fv("u_Transform", matrix);
+            RotatingQuad.Translate(glm::vec3(CenterQuad.GetPosition().x, 0.0f, 0.0f));
+            
 
 
-           glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+            RotatingQuad.Translate(glm::vec3(cos(time + i), sin(time + i), 0.0f));
+            RotatingQuad.Render();
         }
-        vao.Unbind();
-        defaultShader.DisableProgram();
 
         Movement(window, entity);
         entity.Render();
@@ -215,10 +155,7 @@ int main()
         glfwSwapBuffers(window);
     }
 
-    vao.Delete();
-    vbo.Delete();
-    cbo.Delete();
-    defaultShader.DeleteProgram();
+
     glfwTerminate();
     return 0;
 }
